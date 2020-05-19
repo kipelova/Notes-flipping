@@ -54,7 +54,27 @@
                             <outlet property="delegate" destination="OZC-Vi-vVm" id="x0l-2f-21w"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Мои ноты" id="17h-ts-VPG"/>
+                    <toolbarItems>
+                        <barButtonItem title="Удалить все" id="cu1-vl-20Y">
+                            <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </barButtonItem>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" title="Мои ноты" id="17h-ts-VPG">
+                        <barButtonItem key="leftBarButtonItem" title="Изменить" id="C1u-Pf-OtV"/>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="0GG-wC-2So">
+                                <connections>
+                                    <action selector="addAction:" destination="OZC-Vi-vVm" id="Kni-7J-ujZ"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Item" image="suit.heart" catalog="system" id="3Dm-fX-4ff"/>
+                        </rightBarButtonItems>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="addButton" destination="0GG-wC-2So" id="mjh-dN-7Cq"/>
+                        <outlet property="deleteAllButton" destination="cu1-vl-20Y" id="qpv-N5-Erq"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3XU-tU-6sk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -79,4 +99,7 @@
             <point key="canvasLocation" x="-530.37037037037032" y="75.555555555555557"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="suit.heart" catalog="system" width="64" height="54"/>
+    </resources>
 </document>

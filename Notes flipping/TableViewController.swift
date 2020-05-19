@@ -13,6 +13,10 @@ class TableViewController: UITableViewController {
 
     private var realm: Realm!
     private var notes: Results<Note>!
+    private var currentName: String!
+    
+    @IBOutlet weak var addButton: UIBarButtonItem!
+    @IBOutlet weak var deleteAllButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,13 +24,41 @@ class TableViewController: UITableViewController {
         realm = try! Realm()
         notes = self.realm.objects(Note.self)
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        toolbarItems = [deleteAllButton]
     }
-
+    
+    @IBAction func addAction(_ sender: Any) {
+        let controller = UIAlertController(title: "Добавить новые ноты", message: nil, preferredStyle: .alert)
+            
+            let addAction = UIAlertAction(title: "Выбрать файл", style: .default) { (alert) in
+                self.currentName = controller.textFields![0].text!
+                let note = Note()
+                note.name = self.currentName
+                try! self.realm.write {
+                        self.realm.add(note)
+                    }
+                self.tableView.reloadData()
+            }
+            
+            addAction.isEnabled = false
+            
+            let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { (alert) in
+                }
+              
+            controller.addTextField { (textField) in
+                      textField.placeholder = "Введите название нот"
+                NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textField, queue: OperationQueue.main, using:
+                               {_ in
+                                    addAction.isEnabled = textField.text != ""
+                           })
+                  }
+                  
+                controller.addAction(addAction)
+                controller.addAction(cancelAction)
+        
+                present(controller, animated: true, completion: nil)
+    }
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {

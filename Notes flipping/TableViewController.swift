@@ -116,6 +116,52 @@ class TableViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration {
+        let delete = UIContextualAction(style: .normal, title: "Удалить") { (delete, view, competion) in
+            try! self.realm.write {
+                self.realm.delete(self.notes[indexPath.row])
+                }
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            competion(true)
+        }
+        delete.backgroundColor = .red
+        let edit = UIContextualAction(style: .normal, title: "Изменить") { (edit, view, competion) in
+            
+            let controller = UIAlertController(title: "Изменить название нот", message: nil, preferredStyle: .alert)
+            
+            let editAction = UIAlertAction(title: "Изменить", style: .default) { (alert) in
+                try! self.realm.write {
+                    self.notes[indexPath.row].name = controller.textFields![0].text!
+                }
+                self.tableView.reloadData()
+            }
+            
+            editAction.isEnabled = false
+            
+            let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { (alert) in
+                }
+              
+            controller.addTextField { (textField) in
+                      textField.placeholder = "Введите новое название нот"
+                
+                NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textField, queue: OperationQueue.main, using:
+                               {_ in
+                                    editAction.isEnabled = textField.text != ""
+                           })
+                  }
+                  
+                controller.addAction(editAction)
+                controller.addAction(cancelAction)
+                
+            self.present(controller, animated: true, completion: nil)
+        
+            competion(true)
+
+        }
+
+        if (self.isChanging) { return UISwipeActionsConfiguration(actions: [delete]) }
+        else { return UISwipeActionsConfiguration(actions: [delete, edit]) }
+    }
 
     /*
     // Override to support conditional editing of the table view.

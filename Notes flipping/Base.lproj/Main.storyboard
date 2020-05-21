@@ -48,6 +48,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="show" id="IfL-hv-5AY"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -88,7 +91,6 @@
                         <outlet property="deleteAllButton" destination="cu1-vl-20Y" id="qpv-N5-Erq"/>
                         <outlet property="editButton" destination="C1u-Pf-OtV" id="YrQ-Pk-PJb"/>
                         <outlet property="favouriteButton" destination="3Dm-fX-4ff" id="Afs-6B-kwU"/>
-                        <segue destination="BYZ-38-t0r" kind="show" identifier="show" id="JxU-hs-2Cv"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3XU-tU-6sk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

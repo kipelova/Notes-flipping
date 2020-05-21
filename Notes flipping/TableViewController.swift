@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import MobileCoreServices
 
 class TableViewController: UITableViewController {
 
@@ -119,13 +120,13 @@ class TableViewController: UITableViewController {
             favouriteNotes = notes.filter("favourite = true")
             editButton.isEnabled = false
             addButton.isEnabled = false
-            favouriteButton.image = UIImage(systemName: "suit.heart.fill")!.withTintColor(UIColor.systemBlue, renderingMode: .alwaysOriginal)
+            favouriteButton.image = UIImage(systemName: "suit.heart.fill")
         }
         else {
             self.title = "Мои ноты"
             editButton.isEnabled = true
             addButton.isEnabled = true
-            favouriteButton.image = UIImage(systemName: "suit.heart")!.withTintColor(UIColor.systemBlue, renderingMode: .alwaysOriginal)
+            favouriteButton.image = UIImage(systemName: "suit.heart")
         }
         self.tableView.reloadData()
     }
@@ -193,9 +194,9 @@ class TableViewController: UITableViewController {
         }
         
         if (self.notes[indexPath.row].favourite == true) {
-            favourite.image = UIImage(systemName: "heart.fill")!.withTintColor(UIColor.systemPink, renderingMode: .alwaysOriginal)
+            favourite.image = UIImage(systemName: "suit.heart.fill")!.withTintColor(UIColor.systemPink, renderingMode: .alwaysOriginal)
         }
-        else {favourite.image = UIImage(systemName: "heart")!.withTintColor(UIColor.systemPink, renderingMode: .alwaysOriginal) }
+        else {favourite.image = UIImage(systemName: "suit.heart")!.withTintColor(UIColor.systemPink, renderingMode: .alwaysOriginal) }
         favourite.backgroundColor = .systemGray6
         if (self.isFavourite) {return UISwipeActionsConfiguration(actions: [])}
         else {return UISwipeActionsConfiguration(actions: [favourite])}
@@ -208,10 +209,12 @@ class TableViewController: UITableViewController {
                 }
             tableView.deleteRows(at: [indexPath], with: .fade)
             if !self.isChanging {
+                print("hi", self.notes.count)
                 self.editButton.isEnabled = self.notes.count > 0
                 self.favouriteButton.isEnabled = self.notes.count > 0
             }
             else if self.notes.count == 0 {
+                print("hello")
                 self.notEditinStyle()
                 self.editButton.isEnabled = false
                 self.favouriteButton.isEnabled = false
@@ -293,15 +296,12 @@ class TableViewController: UITableViewController {
     }
     */
 
-    /*
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        let dest = segue.destination as? ViewController
+        dest!.title = self.notes[tableView.indexPathForSelectedRow!.row].name
     }
-    */
 }
 
 extension TableViewController: UISearchResultsUpdating {

@@ -14,8 +14,10 @@ class TableViewController: UITableViewController {
     private var realm: Realm!
     private var notes: Results<Note>!
     private var sortedNotes: Results<Note>!
+    private var favouriteNotes: Results<Note>!
     private var currentName: String!
     private var isChanging = false
+    private var isFavourite = false
     
     private let searchController = UISearchController(searchResultsController: nil)
     
@@ -92,6 +94,7 @@ class TableViewController: UITableViewController {
         addButton.isEnabled = true
         favouriteButton.isEnabled = true
         isChanging = false
+        searchController.searchBar.isUserInteractionEnabled = true
     }
     
     @IBAction func editAction(_ sender: Any) {
@@ -103,13 +106,32 @@ class TableViewController: UITableViewController {
             addButton.isEnabled = false
             favouriteButton.isEnabled = false
             isChanging = true
+            searchController.searchBar.isUserInteractionEnabled = false
         } else {
             notEditinStyle()
         }
     }
     
+    @IBAction func favouriteAction(_ sender: Any) {
+        isFavourite = !isFavourite
+        if isFavourite {
+            self.title = "Избранные ноты"
+            favouriteNotes = notes.filter("favourite = true")
+            editButton.isEnabled = false
+            addButton.isEnabled = false
+            favouriteButton.image = UIImage(systemName: "suit.heart.fill")!.withTintColor(UIColor.systemBlue, renderingMode: .alwaysOriginal)
+        }
+        else {
+            self.title = "Мои ноты"
+            editButton.isEnabled = true
+            addButton.isEnabled = true
+            favouriteButton.image = UIImage(systemName: "suit.heart")!.withTintColor(UIColor.systemBlue, renderingMode: .alwaysOriginal)
+        }
+        self.tableView.reloadData()
+    }
+    
     @IBAction func deleteAllAction(_ sender: Any) {
-        let controller = UIAlertController(title: "", message: "Эти ноты будут удалены. Данное действие необратимо.", preferredStyle: .alert)
+        let controller = UIAlertController(title: "", message: "Все ноты будут удалены. Данное действие необратимо.", preferredStyle: .alert)
         
         let deleteAction = UIAlertAction(title: "Удалить все ноты", style: .destructive) { (alert) in
             try! self.realm.write {
@@ -122,7 +144,7 @@ class TableViewController: UITableViewController {
             self.favouriteButton.isEnabled = false
         }
     
-        let cancelAction = UIAlertAction(title: "Отменить", style: .default) { (alert) in
+        let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { (alert) in
         }
         
         controller.addAction(deleteAction)
@@ -141,6 +163,7 @@ class TableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         if isSearching {return sortedNotes.count}
+        else if isFavourite {return favouriteNotes.count}
         return notes.count
     }
 
@@ -148,12 +171,34 @@ class TableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifier", for: indexPath)
         var note: Note
         
-        if !isSearching { note = notes[indexPath.row] }
+        if (isFavourite && !isSearching) {
+            note = favouriteNotes[indexPath.row]
+        }
+        else if (!isFavourite && !isSearching) {
+            note = notes[indexPath.row]
+        }
         else {note = sortedNotes[indexPath.row]}
         
         cell.textLabel?.text = note.name
 
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration {
+        let favourite = UIContextualAction(style: .normal, title: "Избранное") { (favourite, view, competion) in
+            try! self.realm.write {
+                self.notes[indexPath.row].favourite = !self.notes[indexPath.row].favourite
+            }
+            competion(true)
+        }
+        
+        if (self.notes[indexPath.row].favourite == true) {
+            favourite.image = UIImage(systemName: "heart.fill")!.withTintColor(UIColor.systemPink, renderingMode: .alwaysOriginal)
+        }
+        else {favourite.image = UIImage(systemName: "heart")!.withTintColor(UIColor.systemPink, renderingMode: .alwaysOriginal) }
+        favourite.backgroundColor = .systemGray6
+        if (self.isFavourite) {return UISwipeActionsConfiguration(actions: [])}
+        else {return UISwipeActionsConfiguration(actions: [favourite])}
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration {
@@ -162,7 +207,10 @@ class TableViewController: UITableViewController {
                 self.realm.delete(self.notes[indexPath.row])
                 }
             tableView.deleteRows(at: [indexPath], with: .fade)
-            if !self.isChanging { self.editButton.isEnabled = self.notes.count > 0 }
+            if !self.isChanging {
+                self.editButton.isEnabled = self.notes.count > 0
+                self.favouriteButton.isEnabled = self.notes.count > 0
+            }
             else if self.notes.count == 0 {
                 self.notEditinStyle()
                 self.editButton.isEnabled = false
@@ -261,8 +309,11 @@ func updateSearchResults(for searchController: UISearchController) {
     filterContentForSearchText(searchController.searchBar.text!)
 }
     private func filterContentForSearchText(_ searchText:String){
-        sortedNotes = notes.filter("name CONTAINS[c] '\(searchText.lowercased())'")
-         tableView.reloadData()
-    }
+        if isFavourite {
+            sortedNotes = favouriteNotes.filter("name CONTAINS[c] '\(searchText.lowercased())'")}
+            else {
+                sortedNotes = notes.filter("name CONTAINS[c] '\(searchText.lowercased())'")}
+            tableView.reloadData()
+        }
 }
 

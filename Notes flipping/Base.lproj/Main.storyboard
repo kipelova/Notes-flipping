@@ -75,7 +75,11 @@
                                     <action selector="addAction:" destination="OZC-Vi-vVm" id="Kni-7J-ujZ"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Item" image="suit.heart" catalog="system" id="3Dm-fX-4ff"/>
+                            <barButtonItem title="Item" image="suit.heart" catalog="system" id="3Dm-fX-4ff">
+                                <connections>
+                                    <action selector="favouriteAction:" destination="OZC-Vi-vVm" id="nVu-fL-BU0"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>

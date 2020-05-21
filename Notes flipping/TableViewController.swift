@@ -137,7 +137,12 @@ class TableViewController: UITableViewController {
                 self.realm.delete(self.notes[indexPath.row])
                 }
             tableView.deleteRows(at: [indexPath], with: .fade)
-            self.editButton.isEnabled = self.notes.count > 0
+            if !self.isChanging { self.editButton.isEnabled = self.notes.count > 0 }
+            else if self.notes.count == 0 {
+                self.notEditinStyle()
+                self.editButton.isEnabled = false
+                tableView.setEditing(false, animated: true)
+            }
             competion(true)
         }
         delete.backgroundColor = .red

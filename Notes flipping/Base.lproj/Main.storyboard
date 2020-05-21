@@ -17,6 +17,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" id="so7-eo-FHL"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -60,7 +61,11 @@
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Мои ноты" id="17h-ts-VPG">
-                        <barButtonItem key="leftBarButtonItem" title="Изменить" id="C1u-Pf-OtV"/>
+                        <barButtonItem key="leftBarButtonItem" title="Изменить" id="C1u-Pf-OtV">
+                            <connections>
+                                <action selector="editAction:" destination="OZC-Vi-vVm" id="6vK-NE-CkG"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="0GG-wC-2So">
                                 <connections>
@@ -74,6 +79,9 @@
                     <connections>
                         <outlet property="addButton" destination="0GG-wC-2So" id="mjh-dN-7Cq"/>
                         <outlet property="deleteAllButton" destination="cu1-vl-20Y" id="qpv-N5-Erq"/>
+                        <outlet property="editButton" destination="C1u-Pf-OtV" id="YrQ-Pk-PJb"/>
+                        <outlet property="favouriteButton" destination="3Dm-fX-4ff" id="Afs-6B-kwU"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="show" id="JxU-hs-2Cv"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3XU-tU-6sk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

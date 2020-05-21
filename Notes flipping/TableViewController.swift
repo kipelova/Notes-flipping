@@ -14,8 +14,11 @@ class TableViewController: UITableViewController {
     private var realm: Realm!
     private var notes: Results<Note>!
     private var currentName: String!
+    private var isChanging = false
     
     @IBOutlet weak var addButton: UIBarButtonItem!
+    @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var favouriteButton: UIBarButtonItem!
     @IBOutlet weak var deleteAllButton: UIBarButtonItem!
     
     override func viewDidLoad() {
@@ -57,6 +60,28 @@ class TableViewController: UITableViewController {
                 controller.addAction(cancelAction)
         
                 present(controller, animated: true, completion: nil)
+    }
+    
+    func notEditinStyle() {
+        editButton.title = "Изменить"
+        navigationController?.setToolbarHidden(true, animated: true)
+        addButton.isEnabled = true
+        favouriteButton.isEnabled = true
+        isChanging = false
+    }
+    
+    @IBAction func editAction(_ sender: Any) {
+        tableView.setEditing(!tableView.isEditing, animated: true)
+        
+        if tableView.isEditing {
+            editButton.title = "Готово"
+            navigationController?.setToolbarHidden(false, animated: true)
+            addButton.isEnabled = false
+            favouriteButton.isEnabled = false
+            isChanging = true
+        } else {
+            notEditinStyle()
+        }
     }
     
     // MARK: - Table view data source

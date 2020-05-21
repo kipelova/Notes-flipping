@@ -43,6 +43,7 @@ class TableViewController: UITableViewController {
         
         toolbarItems = [deleteAllButton]
         editButton.isEnabled = notes.count > 0
+        favouriteButton.isEnabled = notes.count > 0
         
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -63,6 +64,7 @@ class TableViewController: UITableViewController {
                     }
                 self.tableView.reloadData()
                 self.editButton.isEnabled = true
+                self.favouriteButton.isEnabled = true
             }
             
             addAction.isEnabled = false
@@ -117,6 +119,7 @@ class TableViewController: UITableViewController {
             self.notEditinStyle()
             self.tableView.reloadData()
             self.editButton.isEnabled = false
+            self.favouriteButton.isEnabled = false
         }
     
         let cancelAction = UIAlertAction(title: "Отменить", style: .default) { (alert) in
@@ -163,6 +166,7 @@ class TableViewController: UITableViewController {
             else if self.notes.count == 0 {
                 self.notEditinStyle()
                 self.editButton.isEnabled = false
+                self.favouriteButton.isEnabled = false
                 tableView.setEditing(false, animated: true)
             }
             competion(true)

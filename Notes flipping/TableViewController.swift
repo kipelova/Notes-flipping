@@ -13,8 +13,22 @@ class TableViewController: UITableViewController {
 
     private var realm: Realm!
     private var notes: Results<Note>!
+    private var sortedNotes: Results<Note>!
     private var currentName: String!
     private var isChanging = false
+    
+    private let searchController = UISearchController(searchResultsController: nil)
+    
+    private var isEmpty: Bool {
+        guard let text = searchController.searchBar.text else {
+            return false
+        }
+        return text.isEmpty
+    }
+    
+    private var isSearching: Bool {
+        return searchController.isActive && (!isEmpty || searchController.searchBar.selectedScopeButtonIndex != 0)
+    }
     
     @IBOutlet weak var addButton: UIBarButtonItem!
     @IBOutlet weak var editButton: UIBarButtonItem!
@@ -29,6 +43,12 @@ class TableViewController: UITableViewController {
         
         toolbarItems = [deleteAllButton]
         editButton.isEnabled = notes.count > 0
+        
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Поиск нот"
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
     }
     
     @IBAction func addAction(_ sender: Any) {
@@ -117,15 +137,17 @@ class TableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
+        if isSearching {return sortedNotes.count}
         return notes.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifier", for: indexPath)
-
         var note: Note
         
-        note = notes[indexPath.row]
+        if !isSearching { note = notes[indexPath.row] }
+        else {note = sortedNotes[indexPath.row]}
+        
         cell.textLabel?.text = note.name
 
         return cell
@@ -228,5 +250,15 @@ class TableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
 }
+
+extension TableViewController: UISearchResultsUpdating {
+func updateSearchResults(for searchController: UISearchController) {
+    filterContentForSearchText(searchController.searchBar.text!)
+}
+    private func filterContentForSearchText(_ searchText:String){
+        sortedNotes = notes.filter("name CONTAINS[c] '\(searchText.lowercased())'")
+         tableView.reloadData()
+    }
+}
+

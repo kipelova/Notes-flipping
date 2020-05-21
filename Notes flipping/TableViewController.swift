@@ -84,6 +84,15 @@ class TableViewController: UITableViewController {
         }
     }
     
+    @IBAction func deleteAllAction(_ sender: Any) {
+        try! self.realm.write {
+            self.realm.deleteAll()
+        }
+        tableView.setEditing(false, animated: true)
+        notEditinStyle()
+        tableView.reloadData()
+    }
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {

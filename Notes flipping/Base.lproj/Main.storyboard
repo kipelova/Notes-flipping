@@ -58,6 +58,9 @@
                     <toolbarItems>
                         <barButtonItem title="Удалить все" id="cu1-vl-20Y">
                             <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="deleteAllAction:" destination="OZC-Vi-vVm" id="xBh-bh-j4b"/>
+                            </connections>
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Мои ноты" id="17h-ts-VPG">

@@ -28,6 +28,7 @@ class TableViewController: UITableViewController {
         notes = self.realm.objects(Note.self)
         
         toolbarItems = [deleteAllButton]
+        editButton.isEnabled = notes.count > 0
     }
     
     @IBAction func addAction(_ sender: Any) {
@@ -41,6 +42,7 @@ class TableViewController: UITableViewController {
                         self.realm.add(note)
                     }
                 self.tableView.reloadData()
+                self.editButton.isEnabled = true
             }
             
             addAction.isEnabled = false
@@ -85,12 +87,25 @@ class TableViewController: UITableViewController {
     }
     
     @IBAction func deleteAllAction(_ sender: Any) {
-        try! self.realm.write {
-            self.realm.deleteAll()
+        let controller = UIAlertController(title: "", message: "Эти ноты будут удалены. Данное действие необратимо.", preferredStyle: .alert)
+        
+        let deleteAction = UIAlertAction(title: "Удалить все ноты", style: .destructive) { (alert) in
+            try! self.realm.write {
+                self.realm.deleteAll()
+            }
+            self.tableView.setEditing(false, animated: true)
+            self.notEditinStyle()
+            self.tableView.reloadData()
+            self.editButton.isEnabled = false
         }
-        tableView.setEditing(false, animated: true)
-        notEditinStyle()
-        tableView.reloadData()
+    
+        let cancelAction = UIAlertAction(title: "Отменить", style: .default) { (alert) in
+        }
+        
+        controller.addAction(deleteAction)
+        controller.addAction(cancelAction)
+        
+        present(controller, animated: true, completion: nil)
     }
     
     // MARK: - Table view data source
@@ -122,6 +137,7 @@ class TableViewController: UITableViewController {
                 self.realm.delete(self.notes[indexPath.row])
                 }
             tableView.deleteRows(at: [indexPath], with: .fade)
+            self.editButton.isEnabled = self.notes.count > 0
             competion(true)
         }
         delete.backgroundColor = .red

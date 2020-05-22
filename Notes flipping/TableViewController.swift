@@ -298,8 +298,10 @@ class TableViewController: UITableViewController {
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let dest = segue.destination as? ViewController
-        dest!.title = self.notes[tableView.indexPathForSelectedRow!.row].name
+        let destination = segue.destination as? ViewController
+        destination!.title = notes[tableView.indexPathForSelectedRow!.row].name
+       destination!.url = URL(string:notes[tableView.indexPathForSelectedRow!.row].url)!
+        
     }
 }
 
@@ -319,11 +321,12 @@ func updateSearchResults(for searchController: UISearchController) {
 extension TableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
         let note = Note()
-        note.name = self.currentName
+        note.name = currentName
         note.favourite = false
         note.url = url.absoluteString
-        try! self.realm.write {
-                self.realm.add(note)
+        print(url)
+        try! realm.write {
+                realm.add(note)
             }
         self.tableView.reloadData()
     }

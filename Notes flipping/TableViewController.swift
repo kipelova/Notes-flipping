@@ -19,6 +19,7 @@ class TableViewController: UITableViewController {
     private var currentName: String!
     private var isChanging = false
     private var isFavourite = false
+    private var documentPicker = UIDocumentPickerViewController(documentTypes: [kUTTypePDF as String], in: .import)
     
     private let searchController = UISearchController(searchResultsController: nil)
     
@@ -53,19 +54,20 @@ class TableViewController: UITableViewController {
         searchController.searchBar.placeholder = "Поиск нот"
         navigationItem.searchController = searchController
         definesPresentationContext = true
+        
+        documentPicker.delegate = self
+        if #available(iOS 11.0, *){
+            documentPicker.allowsMultipleSelection = false
+        }
     }
     
     @IBAction func addAction(_ sender: Any) {
+        
         let controller = UIAlertController(title: "Добавить новые ноты", message: nil, preferredStyle: .alert)
             
             let addAction = UIAlertAction(title: "Выбрать файл", style: .default) { (alert) in
                 self.currentName = controller.textFields![0].text!
-                let note = Note()
-                note.name = self.currentName
-                try! self.realm.write {
-                        self.realm.add(note)
-                    }
-                self.tableView.reloadData()
+                self.present(self.documentPicker, animated: true, completion: nil)
                 self.editButton.isEnabled = true
                 self.favouriteButton.isEnabled = true
             }
@@ -86,7 +88,7 @@ class TableViewController: UITableViewController {
                 controller.addAction(addAction)
                 controller.addAction(cancelAction)
         
-                present(controller, animated: true, completion: nil)
+        present(controller, animated: true, completion: nil) 
     }
     
     func notEditinStyle() {
@@ -209,12 +211,10 @@ class TableViewController: UITableViewController {
                 }
             tableView.deleteRows(at: [indexPath], with: .fade)
             if !self.isChanging {
-                print("hi", self.notes.count)
                 self.editButton.isEnabled = self.notes.count > 0
                 self.favouriteButton.isEnabled = self.notes.count > 0
             }
             else if self.notes.count == 0 {
-                print("hello")
                 self.notEditinStyle()
                 self.editButton.isEnabled = false
                 self.favouriteButton.isEnabled = false
@@ -254,9 +254,8 @@ class TableViewController: UITableViewController {
             self.present(controller, animated: true, completion: nil)
         
             competion(true)
-
         }
-
+        
         if (self.isChanging) { return UISwipeActionsConfiguration(actions: [delete]) }
         else { return UISwipeActionsConfiguration(actions: [delete, edit]) }
     }
@@ -317,3 +316,15 @@ func updateSearchResults(for searchController: UISearchController) {
         }
 }
 
+extension TableViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        let note = Note()
+        note.name = self.currentName
+        note.favourite = false
+        note.url = url.absoluteString
+        try! self.realm.write {
+                self.realm.add(note)
+            }
+        self.tableView.reloadData()
+    }
+}

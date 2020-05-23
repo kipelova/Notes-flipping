@@ -10,14 +10,33 @@ import UIKit
 import RealmSwift
 import PDFKit
 
-class ViewController: UIViewController {
+protocol ViewControllerDelegate: class {
+    func changeVertical()
+    func changeHorizontal()
+}
+
+class ViewController: UIViewController, ViewControllerDelegate {
 
     private var isTurning = false
     var document: PDFDocument?
+    private var vertical = true
     private var outline: PDFOutline?
     
     @IBOutlet weak var pdfView: PDFView!
     @IBOutlet weak var pageButton: UIBarButtonItem!
+    
+    func changeVertical() {
+        vertical = true
+        pdfView.go(to: (document?.page(at:1))!)
+        pdfView.displayDirection = .vertical
+    }
+    
+    func changeHorizontal() {
+        vertical = false
+        pdfView.go(to: (document?.page(at:1))!)
+        pdfView.displayDirection = .horizontal
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,10 +54,11 @@ class ViewController: UIViewController {
         pageButton.title = "1/\(document!.pageCount)"
         view.addSubview(pdfView)
         pdfView.displayDirection = .vertical
-        //pdfView.usePageViewController(true, withViewOptions: nil)
         pdfView.displayMode = .singlePageContinuous
         pdfView.pageBreakMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         pdfView.autoScales = true
+        //pdfView.usePageViewController(true, withViewOptions: [:])
+
     }
     @objc private func handlePageChange(notification: Notification)
       {
@@ -48,6 +68,12 @@ class ViewController: UIViewController {
         if (!(parent?.isEqual(self.parent) ?? false)) {
             self.navigationController?.setToolbarHidden(true, animated: true)
         }
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let destination = segue.destination as? SettingsTableViewController else { return }
+        destination.delegate = self
+        if vertical {destination.vertical = true}
+        else {destination.vertical = false}
     }
 }
 

@@ -17,6 +17,7 @@
 		BE9DD6F02474671A001F9BAC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE9DD6EE2474671A001F9BAC /* LaunchScreen.storyboard */; };
 		BE9DD6F8247469D4001F9BAC /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9DD6F7247469D4001F9BAC /* TableViewController.swift */; };
 		BE9DD6FA24746B34001F9BAC /* model.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9DD6F924746B34001F9BAC /* model.swift */; };
+		BE9DD7002479570B001F9BAC /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9DD6FF2479570B001F9BAC /* SettingsTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		BE9DD6F12474671A001F9BAC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE9DD6F7247469D4001F9BAC /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		BE9DD6F924746B34001F9BAC /* model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = model.swift; sourceTree = "<group>"; };
+		BE9DD6FF2479570B001F9BAC /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 			children = (
 				BE9DD6E024746715001F9BAC /* AppDelegate.swift */,
 				BE9DD6E224746715001F9BAC /* SceneDelegate.swift */,
+				BE9DD6FF2479570B001F9BAC /* SettingsTableViewController.swift */,
 				BE9DD6F924746B34001F9BAC /* model.swift */,
 				BE9DD6F7247469D4001F9BAC /* TableViewController.swift */,
 				BE9DD6E424746715001F9BAC /* ViewController.swift */,
@@ -200,6 +203,7 @@
 				BE9DD6EB24746715001F9BAC /* Notes_flipping.xcdatamodeld in Sources */,
 				BE9DD6FA24746B34001F9BAC /* model.swift in Sources */,
 				BE9DD6E524746715001F9BAC /* ViewController.swift in Sources */,
+				BE9DD7002479570B001F9BAC /* SettingsTableViewController.swift in Sources */,
 				BE9DD6E124746715001F9BAC /* AppDelegate.swift in Sources */,
 				BE9DD6F8247469D4001F9BAC /* TableViewController.swift in Sources */,
 				BE9DD6E324746715001F9BAC /* SceneDelegate.swift in Sources */,

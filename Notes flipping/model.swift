@@ -8,9 +8,10 @@
 
 import Foundation
 import RealmSwift
+import PDFKit
 
 class Note: Object {
-    @objc dynamic var name: String = ""
-    @objc dynamic var url: String = ""
+    @objc dynamic var name: String!
     @objc dynamic var favourite: Bool = false
+    @objc dynamic var document: Data!
 }

@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import MobileCoreServices
+import PDFKit
 
 class TableViewController: UITableViewController {
 
@@ -46,6 +47,7 @@ class TableViewController: UITableViewController {
         notes = self.realm.objects(Note.self)
         
         toolbarItems = [deleteAllButton]
+        navigationController?.setToolbarHidden(true, animated: true)
         editButton.isEnabled = notes.count > 0
         favouriteButton.isEnabled = notes.count > 0
         
@@ -300,8 +302,7 @@ class TableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destination = segue.destination as? ViewController
         destination!.title = notes[tableView.indexPathForSelectedRow!.row].name
-       destination!.url = URL(string:notes[tableView.indexPathForSelectedRow!.row].url)!
-        
+        destination!.document = PDFDocument(data:notes[tableView.indexPathForSelectedRow!.row].document!)
     }
 }
 
@@ -322,9 +323,7 @@ extension TableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
         let note = Note()
         note.name = currentName
-        note.favourite = false
-        note.url = url.absoluteString
-        print(url)
+        note.document = PDFDocument(url: url)?.dataRepresentation()
         try! realm.write {
                 realm.add(note)
             }

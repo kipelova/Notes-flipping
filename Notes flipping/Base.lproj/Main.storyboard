@@ -16,18 +16,23 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="euh-jh-MF8" customClass="PDFView">
-                                <rect key="frame" x="0.0" y="50" width="810" height="980"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="20" y="65" width="770" height="965"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem title="Item" id="AQR-cC-ytv"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" id="so7-eo-FHL">
                         <barButtonItem key="rightBarButtonItem" title="Настроить перелистывание" id="9Rk-LV-unv"/>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="pageButton" destination="AQR-cC-ytv" id="w1B-Uc-6ce"/>
                         <outlet property="pdfView" destination="euh-jh-MF8" id="9qg-KZ-Mr6"/>
                     </connections>
                 </viewController>

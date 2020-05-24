@@ -15,8 +15,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="810" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HhY-0s-YeF" customClass="PDFThumbnailView">
+                                <rect key="frame" x="0.0" y="890" width="810" height="140"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3ON-DZ-0SY" customClass="PDFThumbnailView">
+                                <rect key="frame" x="0.0" y="50" width="110" height="980"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="euh-jh-MF8" customClass="PDFView">
-                                <rect key="frame" x="0.0" y="65" width="810" height="1015"/>
+                                <rect key="frame" x="0.0" y="50" width="810" height="980"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
@@ -36,8 +46,10 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="horizontalThumbnail" destination="HhY-0s-YeF" id="GD3-7w-miq"/>
                         <outlet property="pageButton" destination="AQR-cC-ytv" id="w1B-Uc-6ce"/>
                         <outlet property="pdfView" destination="euh-jh-MF8" id="9qg-KZ-Mr6"/>
+                        <outlet property="verticalThumbnail" destination="3ON-DZ-0SY" id="lVD-XR-ztB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -149,6 +161,9 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="crb-YF-Mb9">
                                                     <rect key="frame" x="740" y="6" width="50" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="iconAction:" destination="eML-Jl-9ie" eventType="valueChanged" id="Ss9-Mg-XOC"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -165,6 +180,7 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="horizontalSwitch" destination="g4B-Uk-q5w" id="JY3-nl-t3X"/>
+                        <outlet property="iconSwitch" destination="crb-YF-Mb9" id="b7Y-TT-BwG"/>
                         <outlet property="verticalSwitch" destination="UFN-LA-2Dq" id="evZ-b7-S3e"/>
                     </connections>
                 </tableViewController>

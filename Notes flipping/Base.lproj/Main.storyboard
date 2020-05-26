@@ -21,7 +21,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3ON-DZ-0SY" customClass="PDFThumbnailView">
-                                <rect key="frame" x="0.0" y="50" width="110" height="980"/>
+                                <rect key="frame" x="0.0" y="65" width="110" height="965"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
@@ -82,8 +82,11 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="qVS-QQ-ne9">
-                                                    <rect key="frame" x="740" y="6" width="50" height="31"/>
+                                                    <rect key="frame" x="739" y="6" width="51" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="automaticAction:" destination="eML-Jl-9ie" eventType="valueChanged" id="bFp-iO-wEo"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -107,7 +110,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UFN-LA-2Dq">
-                                                    <rect key="frame" x="740" y="6" width="50" height="31"/>
+                                                    <rect key="frame" x="739" y="6" width="51" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                     <connections>
                                                         <action selector="verticalAction:" destination="eML-Jl-9ie" eventType="valueChanged" id="IEd-iL-WLi"/>
@@ -131,7 +134,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="g4B-Uk-q5w">
-                                                    <rect key="frame" x="740" y="6" width="50" height="31"/>
+                                                    <rect key="frame" x="739" y="6" width="51" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                     <connections>
                                                         <action selector="horizontalAction:" destination="eML-Jl-9ie" eventType="valueChanged" id="Zu3-lI-X3m"/>
@@ -159,7 +162,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="crb-YF-Mb9">
-                                                    <rect key="frame" x="740" y="6" width="50" height="31"/>
+                                                    <rect key="frame" x="739" y="6" width="51" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                     <connections>
                                                         <action selector="iconAction:" destination="eML-Jl-9ie" eventType="valueChanged" id="Ss9-Mg-XOC"/>
@@ -179,6 +182,7 @@
                     <navigationItem key="navigationItem" title="Настройки перелистывания" id="PDC-HM-atO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="automaticSwitch" destination="qVS-QQ-ne9" id="evv-br-Qcb"/>
                         <outlet property="horizontalSwitch" destination="g4B-Uk-q5w" id="JY3-nl-t3X"/>
                         <outlet property="iconSwitch" destination="crb-YF-Mb9" id="b7Y-TT-BwG"/>
                         <outlet property="verticalSwitch" destination="UFN-LA-2Dq" id="evZ-b7-S3e"/>

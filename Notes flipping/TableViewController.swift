@@ -11,8 +11,12 @@ import RealmSwift
 import MobileCoreServices
 import PDFKit
 
-class TableViewController: UITableViewController {
+protocol TableViewControllerDelegate: class {
+    func changeParameters(automatic: Bool, vertical: Bool, icon: Bool, row: Int)
+}
 
+class TableViewController: UITableViewController, TableViewControllerDelegate {
+    
     private var realm: Realm!
     private var notes: Results<Note>!
     private var sortedNotes: Results<Note>!
@@ -40,9 +44,17 @@ class TableViewController: UITableViewController {
     @IBOutlet weak var favouriteButton: UIBarButtonItem!
     @IBOutlet weak var deleteAllButton: UIBarButtonItem!
     
+    func changeParameters(automatic: Bool, vertical: Bool, icon: Bool, row: Int) {
+        try! realm.write {
+            self.notes[row].automatic = automatic
+            self.notes[row].vertical = vertical
+            self.notes[row].icon = icon
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         realm = try! Realm()
         notes = self.realm.objects(Note.self)
         
@@ -301,8 +313,13 @@ class TableViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destination = segue.destination as? ViewController
+        destination!.delegate = self
         destination!.title = notes[tableView.indexPathForSelectedRow!.row].name
         destination!.document = PDFDocument(data:notes[tableView.indexPathForSelectedRow!.row].document!)
+        destination!.automatic = notes[tableView.indexPathForSelectedRow!.row].automatic
+        destination!.vertical = notes[tableView.indexPathForSelectedRow!.row].vertical
+        destination!.icon = notes[tableView.indexPathForSelectedRow!.row].icon
+        destination!.row = tableView.indexPathForSelectedRow!.row
     }
 }
 

@@ -13,14 +13,21 @@ class SettingsTableViewController: UITableViewController {
     weak var delegate: ViewControllerDelegate?
     
     var vertical: Bool!
+    var icon: Bool!
+    var automatic: Bool!
     
     @IBOutlet weak var verticalSwitch: UISwitch!
     @IBOutlet weak var horizontalSwitch: UISwitch!
+    @IBOutlet weak var iconSwitch: UISwitch!
+    @IBOutlet weak var automaticSwitch: UISwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         navigationController?.setToolbarHidden(true, animated: true)
+        
+        iconSwitch.setOn(icon, animated: false)
+        automaticSwitch.setOn(automatic, animated: false)
         
         if vertical {
             horizontalSwitch.setOn(false, animated: false)
@@ -53,7 +60,14 @@ class SettingsTableViewController: UITableViewController {
             delegate?.changeVertical()
         }
     }
+        
+    @IBAction func iconAction(_ sender: Any) {
+        delegate?.changeIcon()
+    }
     
+    @IBAction func automaticAction(_ sender: Any) {
+        delegate?.changeAutomatic()
+    }
     
     // MARK: - Table view data source
 

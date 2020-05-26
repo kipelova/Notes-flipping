@@ -14,4 +14,7 @@ class Note: Object {
     @objc dynamic var name: String!
     @objc dynamic var favourite: Bool = false
     @objc dynamic var document: Data!
+    @objc dynamic var automatic: Bool = false
+    @objc dynamic var vertical: Bool = true
+    @objc dynamic var icon: Bool = false
 }

@@ -14,18 +14,22 @@ protocol ViewControllerDelegate: class {
     func changeVertical()
     func changeHorizontal()
     func changeIcon()
+    func changeAutomatic()
 }
 
 class ViewController: UIViewController, ViewControllerDelegate {
 
+    weak var delegate: TableViewControllerDelegate?
+    
     private var isTurning = false
-    private var icon = false
+    var icon: Bool!
     var document: PDFDocument?
-    private var vertical = true
+    var vertical: Bool!
+    var automatic: Bool!
     private var viewPdf: CGRect!
     private var viewVertical: CGRect!
     private var viewHorizontal: CGRect!
-    private var outline: PDFOutline?
+    var row: Int!
     
     @IBOutlet weak var pdfView: PDFView!
     @IBOutlet weak var verticalThumbnail: PDFThumbnailView!
@@ -49,6 +53,10 @@ class ViewController: UIViewController, ViewControllerDelegate {
     func changeIcon(){
         icon = !icon
         changeThumbnail()
+    }
+    
+    func changeAutomatic(){
+        automatic = !automatic
     }
     
     override func viewDidLoad() {
@@ -77,7 +85,6 @@ class ViewController: UIViewController, ViewControllerDelegate {
             }
             else {
                 pdfView.frame =  CGRect(x: viewPdf.minX, y:viewPdf.minY , width: viewPdf.width, height:viewPdf.height-viewHorizontal.height)
-                print (pdfView.frame)
             }
             horizontalThumbnail.isHidden = vertical
             verticalThumbnail.isHidden = !vertical
@@ -93,7 +100,8 @@ class ViewController: UIViewController, ViewControllerDelegate {
         pdfView.document = document
         pageButton.title = "1/\(document!.pageCount)"
         view.addSubview(pdfView)
-        pdfView.displayDirection = .vertical
+        if vertical {pdfView.displayDirection = .vertical}
+        else {pdfView.displayDirection = .horizontal}
         pdfView.displayMode = .singlePageContinuous
         pdfView.pageBreakMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         pdfView.autoScales = true
@@ -119,6 +127,8 @@ class ViewController: UIViewController, ViewControllerDelegate {
     override func willMove(toParent parent: UIViewController?) {
         if (!(parent?.isEqual(self.parent) ?? false)) {
             self.navigationController?.setToolbarHidden(true, animated: true)
+            
+            delegate!.changeParameters(automatic: automatic, vertical: vertical, icon: icon, row: row)
         }
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -126,6 +136,7 @@ class ViewController: UIViewController, ViewControllerDelegate {
         destination.delegate = self
         destination.vertical = vertical
         destination.icon = icon
+        destination.automatic = automatic
     }
 }
 

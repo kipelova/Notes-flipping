@@ -27,8 +27,6 @@ class ViewController: UIViewController, ViewControllerDelegate {
     var vertical: Bool!
     var automatic: Bool!
     private var viewPdf: CGRect!
-    private var viewVertical: CGRect!
-    private var viewHorizontal: CGRect!
     var row: Int!
     
     @IBOutlet weak var pdfView: PDFView!
@@ -63,8 +61,6 @@ class ViewController: UIViewController, ViewControllerDelegate {
         super.viewDidLoad()
         
         viewPdf = pdfView.frame
-        viewVertical = verticalThumbnail.frame
-        viewHorizontal = horizontalThumbnail.frame
         
         pdfView.frame =  CGRect(x:110, y: 0, width:668, height:864)
         changeThumbnail()
@@ -81,10 +77,10 @@ class ViewController: UIViewController, ViewControllerDelegate {
     private func changeThumbnail(){
         if icon {
             if vertical {
-                pdfView.frame =  CGRect(x: viewVertical.width, y:viewPdf.minY , width: viewPdf.width-viewVertical.width, height:viewPdf.height)
+                pdfView.frame =  CGRect(x: verticalThumbnail.frame.width, y:viewPdf.minY , width: viewPdf.width-verticalThumbnail.frame.width, height:viewPdf.height)
             }
             else {
-                pdfView.frame =  CGRect(x: viewPdf.minX, y:viewPdf.minY , width: viewPdf.width, height:viewPdf.height-viewHorizontal.height)
+                pdfView.frame =  CGRect(x: viewPdf.minX, y:viewPdf.minY , width: viewPdf.width, height:viewPdf.height-horizontalThumbnail.frame.height)
             }
             horizontalThumbnail.isHidden = vertical
             verticalThumbnail.isHidden = !vertical

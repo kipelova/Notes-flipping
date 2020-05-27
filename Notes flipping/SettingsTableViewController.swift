@@ -15,9 +15,9 @@ class SettingsTableViewController: UITableViewController {
     var vertical: Bool!
     var icon: Bool!
     var automatic: Bool!
-    
-    @IBOutlet weak var verticalSwitch: UISwitch!
-    @IBOutlet weak var horizontalSwitch: UISwitch!
+   
+    @IBOutlet weak var horizontalChoice: UITableViewCell!
+    @IBOutlet weak var verticalChoice: UITableViewCell!
     @IBOutlet weak var iconSwitch: UISwitch!
     @IBOutlet weak var automaticSwitch: UISwitch!
     
@@ -30,34 +30,10 @@ class SettingsTableViewController: UITableViewController {
         automaticSwitch.setOn(automatic, animated: false)
         
         if vertical {
-            horizontalSwitch.setOn(false, animated: false)
-            verticalSwitch.setOn(true, animated: false)
+            verticalChoice.accessoryType = UITableViewCell.AccessoryType.checkmark
         }
         else {
-            horizontalSwitch.setOn(true, animated: false)
-            verticalSwitch.setOn(false, animated: false)
-        }
-    }
-    
-    @IBAction func verticalAction(_ sender: Any) {
-        if verticalSwitch.isOn {
-            horizontalSwitch.setOn(false, animated: true)
-            delegate?.changeVertical()
-        }
-        else {
-            horizontalSwitch.setOn(true, animated: true)
-            delegate?.changeHorizontal()
-        }
-    }
-    
-    @IBAction func horizontalAction(_ sender: Any) {
-        if horizontalSwitch.isOn {
-            verticalSwitch.setOn(false, animated: true)
-            delegate?.changeHorizontal()
-        }
-        else {
-            verticalSwitch.setOn(true, animated: true)
-            delegate?.changeVertical()
+            horizontalChoice.accessoryType = UITableViewCell.AccessoryType.checkmark
         }
     }
         
@@ -71,6 +47,26 @@ class SettingsTableViewController: UITableViewController {
     
     // MARK: - Table view data source
 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+        if indexPath.section == 1 {
+            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCell.AccessoryType.checkmark
+            tableView.deselectRow(at: indexPath, animated: true)
+            if indexPath.row == 0 {
+                horizontalChoice.accessoryType = UITableViewCell.AccessoryType.none
+                delegate?.changeVertical()
+            }
+            else {
+                verticalChoice.accessoryType = UITableViewCell.AccessoryType.none
+                delegate?.changeHorizontal()
+            }
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if indexPath.section == 0 {return nil}
+        return indexPath
+    }
+    
     /*override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 0

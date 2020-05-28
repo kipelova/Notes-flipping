@@ -62,10 +62,11 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
         navigationController?.setToolbarHidden(true, animated: true)
         editButton.isEnabled = notes.count > 0
         favouriteButton.isEnabled = notes.count > 0
-        
+    
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Поиск нот"
+        searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
         navigationItem.searchController = searchController
         definesPresentationContext = true
         
@@ -315,11 +316,7 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
         let destination = segue.destination as? ViewController
         destination!.delegate = self
         destination!.title = notes[tableView.indexPathForSelectedRow!.row].name
-        destination!.document = PDFDocument(data:notes[tableView.indexPathForSelectedRow!.row].document!)
-        destination!.automatic = notes[tableView.indexPathForSelectedRow!.row].automatic
-        destination!.vertical = notes[tableView.indexPathForSelectedRow!.row].vertical
-        destination!.icon = notes[tableView.indexPathForSelectedRow!.row].icon
-        destination!.row = tableView.indexPathForSelectedRow!.row
+        destination!.setParameters(document: PDFDocument(data:notes[tableView.indexPathForSelectedRow!.row].document!)!, row: tableView.indexPathForSelectedRow!.row, automatic: notes[tableView.indexPathForSelectedRow!.row].automatic, icon: notes[tableView.indexPathForSelectedRow!.row].icon, vertical: notes[tableView.indexPathForSelectedRow!.row].vertical)
     }
 }
 

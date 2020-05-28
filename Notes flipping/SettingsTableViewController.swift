@@ -36,6 +36,12 @@ class SettingsTableViewController: UITableViewController {
             horizontalChoice.accessoryType = UITableViewCell.AccessoryType.checkmark
         }
     }
+    
+    func setParameters(automatic: Bool, icon: Bool, vertical: Bool){
+        self.automatic = automatic
+        self.icon = icon
+        self.vertical = vertical
+    }
         
     @IBAction func iconAction(_ sender: Any) {
         delegate?.changeIcon()

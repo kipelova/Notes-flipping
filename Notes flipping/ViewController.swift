@@ -22,12 +22,12 @@ class ViewController: UIViewController, ViewControllerDelegate {
     weak var delegate: TableViewControllerDelegate?
     
     private var isTurning = false
-    var icon: Bool!
-    var document: PDFDocument?
-    var vertical: Bool!
-    var automatic: Bool!
+    private var icon: Bool!
+    private var document: PDFDocument!
+    private var vertical: Bool!
+    private var automatic: Bool!
     private var viewPdf: CGRect!
-    var row: Int!
+    private var row: Int!
     
     @IBOutlet weak var pdfView: PDFView!
     @IBOutlet weak var verticalThumbnail: PDFThumbnailView!
@@ -72,6 +72,14 @@ class ViewController: UIViewController, ViewControllerDelegate {
         thumbnailViewSetup()
         
         NotificationCenter.default.addObserver(self, selector: #selector(handlePageChange(notification:)), name: Notification.Name.PDFViewPageChanged, object: nil)
+    }
+    
+    func setParameters (document: PDFDocument, row: Int, automatic: Bool, icon: Bool, vertical: Bool){
+        self.document = document
+        self.row = row
+        self.automatic = automatic
+        self.icon = icon
+        self.vertical = vertical
     }
     
     private func changeThumbnail(){
@@ -130,9 +138,7 @@ class ViewController: UIViewController, ViewControllerDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let destination = segue.destination as? SettingsTableViewController else { return }
         destination.delegate = self
-        destination.vertical = vertical
-        destination.icon = icon
-        destination.automatic = automatic
+        destination.setParameters(automatic: automatic, icon: icon, vertical: vertical)
     }
 }
 

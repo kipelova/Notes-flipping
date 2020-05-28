@@ -221,20 +221,27 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration {
         let delete = UIContextualAction(style: .normal, title: "Удалить") { (delete, view, competion) in
-            try! self.realm.write {
-                self.realm.delete(self.notes[indexPath.row])
+            if self.isFavourite {
+                try! self.realm.write {
+                    self.notes[indexPath.row].favourite = false
                 }
+            }
+            else {
+                try! self.realm.write {
+                    self.realm.delete(self.notes[indexPath.row])
+                    }
+                if !self.isChanging {
+                    self.editButton.isEnabled = self.notes.count > 0
+                    self.favouriteButton.isEnabled = self.notes.count > 0
+                }
+                else if self.notes.count == 0 {
+                    self.notEditinStyle()
+                    self.editButton.isEnabled = false
+                    self.favouriteButton.isEnabled = false
+                    tableView.setEditing(false, animated: true)
+                }
+            }
             tableView.deleteRows(at: [indexPath], with: .fade)
-            if !self.isChanging {
-                self.editButton.isEnabled = self.notes.count > 0
-                self.favouriteButton.isEnabled = self.notes.count > 0
-            }
-            else if self.notes.count == 0 {
-                self.notEditinStyle()
-                self.editButton.isEnabled = false
-                self.favouriteButton.isEnabled = false
-                tableView.setEditing(false, animated: true)
-            }
             competion(true)
         }
         delete.backgroundColor = .red
@@ -271,7 +278,7 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
             competion(true)
         }
         
-        if (self.isChanging) { return UISwipeActionsConfiguration(actions: [delete]) }
+        if (self.isChanging || self.isFavourite) { return UISwipeActionsConfiguration(actions: [delete]) }
         else { return UISwipeActionsConfiguration(actions: [delete, edit]) }
     }
 

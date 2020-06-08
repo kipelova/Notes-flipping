@@ -9,6 +9,7 @@
 import Foundation
 import RealmSwift
 import PDFKit
+import UIKit
 
 class Note: Object {
     @objc dynamic var name: String!
@@ -17,4 +18,8 @@ class Note: Object {
     @objc dynamic var automatic: Bool = false
     @objc dynamic var vertical: Bool = true
     @objc dynamic var icon: Bool = false
+    
+    static func == (first: Note, second: Note) -> Bool {
+        return first.name == second.name && first.favourite == second.favourite && first.document == second.document && first.automatic == second.automatic && first.vertical == second.vertical && first.icon == second.icon
+    }
 }

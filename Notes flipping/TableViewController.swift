@@ -223,7 +223,14 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
         let delete = UIContextualAction(style: .normal, title: "Удалить") { (delete, view, competion) in
             if self.isFavourite {
                 try! self.realm.write {
-                    self.notes[indexPath.row].favourite = false
+                    var i = 0
+                    while i < self.notes.count {
+                        if self.notes[Int(i)] == (self.favouriteNotes[indexPath.row]) {
+                            self.notes[Int(i)].favourite = false
+                            break
+                        }
+                        i+=1
+                    }
                 }
             }
             else {

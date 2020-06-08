@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVKit
 
 class SettingsTableViewController: UITableViewController {
 
@@ -24,6 +25,8 @@ class SettingsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        automaticSwitch.isEnabled = (AVCaptureDevice.authorizationStatus(for: AVMediaType.video) ==  AVAuthorizationStatus.authorized)
+        
         navigationController?.setToolbarHidden(true, animated: true)
         
         iconSwitch.setOn(icon, animated: false)
@@ -34,6 +37,18 @@ class SettingsTableViewController: UITableViewController {
         }
         else {
             horizontalChoice.accessoryType = UITableViewCell.AccessoryType.checkmark
+        }
+        
+        if (AVCaptureDevice.authorizationStatus(for: AVMediaType.video) ==  AVAuthorizationStatus.denied) {
+            
+            let controller = UIAlertController(title: "Доступ к камере запрещен", message: "Чтобы включить функцию автоматического перелистывания, необходимо разрешить доступ к камере в настройках приложения.", preferredStyle: .alert)
+                
+                let okAction = UIAlertAction(title: "ОК", style: .default) { (alert) in
+                }
+                      
+                    controller.addAction(okAction)
+            
+            present(controller, animated: true, completion: nil)
         }
     }
     
@@ -66,11 +81,6 @@ class SettingsTableViewController: UITableViewController {
                 delegate?.changeHorizontal()
             }
         }
-    }
-    
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if indexPath.section == 0 {return nil}
-        return indexPath
     }
     
     /*override func numberOfSections(in tableView: UITableView) -> Int {
@@ -141,6 +151,7 @@ class SettingsTableViewController: UITableViewController {
     override func willMove(toParent parent: UIViewController?) {
         if (!(parent?.isEqual(self.parent) ?? false)) {
             self.navigationController?.setToolbarHidden(false, animated: true)
+            delegate?.startRunning()
         }
     }
 

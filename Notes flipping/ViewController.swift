@@ -9,15 +9,18 @@
 import UIKit
 import RealmSwift
 import PDFKit
+import AVKit
+import Vision
 
 protocol ViewControllerDelegate: class {
     func changeVertical()
     func changeHorizontal()
     func changeIcon()
     func changeAutomatic()
+    func startRunning()
 }
 
-class ViewController: UIViewController, ViewControllerDelegate {
+class ViewController: UIViewController, ViewControllerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     weak var delegate: TableViewControllerDelegate?
     
@@ -28,11 +31,26 @@ class ViewController: UIViewController, ViewControllerDelegate {
     private var automatic: Bool!
     private var viewPdf: CGRect!
     private var row: Int!
+    private var smile = false
     
     @IBOutlet weak var pdfView: PDFView!
     @IBOutlet weak var verticalThumbnail: PDFThumbnailView!
     @IBOutlet weak var horizontalThumbnail: PDFThumbnailView!
     @IBOutlet weak var pageButton: UIBarButtonItem!
+    
+    lazy var currentSession: AVCaptureSession = {
+        let session = AVCaptureSession()
+        session.sessionPreset = .high
+        guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) else {
+            return session
+        }
+        guard let input = try? AVCaptureDeviceInput(device: camera)
+            else {
+                return session
+            }
+        session.addInput(input)
+        return session
+    }()
     
     func changeVertical() {
         vertical = true
@@ -57,12 +75,24 @@ class ViewController: UIViewController, ViewControllerDelegate {
         automatic = !automatic
     }
     
+    func startRunning(){
+        if automatic {
+            currentSession.startRunning()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if  automatic {
+            currentSession.startRunning()
+            let output = AVCaptureVideoDataOutput()
+            output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "video"))
+            currentSession.addOutput(output)
+        }
+        
         viewPdf = pdfView.frame
         
-        pdfView.frame =  CGRect(x:110, y: 0, width:668, height:864)
         changeThumbnail()
         
         toolbarItems = [pageButton]
@@ -114,20 +144,26 @@ class ViewController: UIViewController, ViewControllerDelegate {
     
     private func thumbnailViewSetup(){
         verticalThumbnail.pdfView = pdfView
-        verticalThumbnail.thumbnailSize = CGSize(width: 100, height: 100)
+        verticalThumbnail.thumbnailSize = CGSize(width: 100, height: 90)
         verticalThumbnail.layoutMode = .vertical
         verticalThumbnail.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
-        
+       
         horizontalThumbnail.pdfView = pdfView
-        horizontalThumbnail.thumbnailSize = CGSize(width: 100, height: 100)
+        horizontalThumbnail.thumbnailSize = CGSize(width: horizontalThumbnail.frame.height - 50, height: horizontalThumbnail.frame.height - 50)
         horizontalThumbnail.layoutMode = .horizontal
         horizontalThumbnail.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
     }
     
-    @objc private func handlePageChange(notification: Notification)
-      {
+    private func changePage(){
+        if (document!.index(for: pdfView.currentPage!)+1 != document!.pageCount) {
+            pdfView.go(to: (document?.page(at:document!.index(for: pdfView.currentPage!)+1))!)
+        }
+    }
+    
+    @objc private func handlePageChange(notification: Notification) {
           pageButton.title = "\(document!.index(for: pdfView.currentPage!)+1)/\(document!.pageCount)"
       }
+    
     override func willMove(toParent parent: UIViewController?) {
         if (!(parent?.isEqual(self.parent) ?? false)) {
             self.navigationController?.setToolbarHidden(true, animated: true)
@@ -135,10 +171,37 @@ class ViewController: UIViewController, ViewControllerDelegate {
             delegate!.changeParameters(automatic: automatic, vertical: vertical, icon: icon, row: row)
         }
     }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let destination = segue.destination as? SettingsTableViewController else { return }
         destination.delegate = self
         destination.setParameters(automatic: automatic, icon: icon, vertical: vertical)
+        currentSession.stopRunning()
+    }
+    
+    func captureOutput(_ output: AVCaptureOutput,
+        didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        
+        guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        let image = CIImage(cvPixelBuffer: pixelBuffer, options: nil)
+        
+        let detector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorSmile : true as AnyObject])!
+        
+        for feature in detector.features(in: image, options: [CIDetectorSmile : true as AnyObject]) as! [CIFaceFeature] {
+            if (feature.hasSmile) {
+                DispatchQueue.main.async {
+                    if !self.smile {
+                    self.smile = true
+                    self.changePage()
+                    }
+                }
+            }
+            else {
+                DispatchQueue.main.async {
+                    self.smile = false
+                }
+            }
+        }
     }
 }
 

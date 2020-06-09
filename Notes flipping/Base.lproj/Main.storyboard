@@ -36,6 +36,8 @@
                     </view>
                     <toolbarItems>
                         <barButtonItem title="Item" id="AQR-cC-ytv"/>
+                        <barButtonItem width="264" style="plain" systemItem="fixedSpace" id="YDG-bk-ns7"/>
+                        <barButtonItem title="Лицо не распознано" id="1kI-GU-ED4"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="so7-eo-FHL">
                         <barButtonItem key="rightBarButtonItem" title="Настроить перелистывание" id="9Rk-LV-unv">
@@ -49,6 +51,7 @@
                         <outlet property="horizontalThumbnail" destination="HhY-0s-YeF" id="GD3-7w-miq"/>
                         <outlet property="pageButton" destination="AQR-cC-ytv" id="w1B-Uc-6ce"/>
                         <outlet property="pdfView" destination="euh-jh-MF8" id="9qg-KZ-Mr6"/>
+                        <outlet property="statusButton" destination="1kI-GU-ED4" id="V1y-O5-GOf"/>
                         <outlet property="verticalThumbnail" destination="3ON-DZ-0SY" id="lVD-XR-ztB"/>
                     </connections>
                 </viewController>

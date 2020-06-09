@@ -115,9 +115,20 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
         searchController.searchBar.isUserInteractionEnabled = true
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        print(indexPath, editingStyle)
+    }
+    
+    override func tableView(_ tableView: UITableView,
+                            canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
     @IBAction func editAction(_ sender: Any) {
+        if tableView.isEditing && editButton.title == "Изменить" {
+            tableView.setEditing(false, animated: false)
+        }
         tableView.setEditing(!tableView.isEditing, animated: true)
-        
         if tableView.isEditing {
             editButton.title = "Готово"
             navigationController?.setToolbarHidden(false, animated: true)
@@ -220,6 +231,7 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration {
+        tableView.setEditing(false, animated: true)
         let delete = UIContextualAction(style: .normal, title: "Удалить") { (delete, view, competion) in
             if self.isFavourite {
                 try! self.realm.write {

@@ -32,13 +32,15 @@ class ViewController: UIViewController, ViewControllerDelegate, AVCaptureVideoDa
     private var viewPdf: CGRect!
     private var row: Int!
     private var smile = false
+    private var output = AVCaptureVideoDataOutput()
     
     @IBOutlet weak var pdfView: PDFView!
     @IBOutlet weak var verticalThumbnail: PDFThumbnailView!
     @IBOutlet weak var horizontalThumbnail: PDFThumbnailView!
     @IBOutlet weak var pageButton: UIBarButtonItem!
+    @IBOutlet weak var statusButton: UIBarButtonItem!
     
-    lazy var currentSession: AVCaptureSession = {
+    private lazy var currentSession: AVCaptureSession = {
         let session = AVCaptureSession()
         session.sessionPreset = .high
         guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) else {
@@ -81,14 +83,15 @@ class ViewController: UIViewController, ViewControllerDelegate, AVCaptureVideoDa
         }
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if  automatic {
+        output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "video"))
+        currentSession.addOutput(output)
+        
+        if automatic {
             currentSession.startRunning()
-            let output = AVCaptureVideoDataOutput()
-            output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "video"))
-            currentSession.addOutput(output)
         }
         
         viewPdf = pdfView.frame

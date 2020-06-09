@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 import PDFKit
-import UIKit
 
 class Note: Object {
     @objc dynamic var name: String!

@@ -15,6 +15,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="810" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="euh-jh-MF8" customClass="PDFView">
+                                <rect key="frame" x="0.0" y="50" width="810" height="980"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HhY-0s-YeF" customClass="PDFThumbnailView">
                                 <rect key="frame" x="0.0" y="890" width="810" height="140"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
@@ -25,19 +30,14 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="euh-jh-MF8" customClass="PDFView">
-                                <rect key="frame" x="0.0" y="50" width="810" height="980"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <toolbarItems>
-                        <barButtonItem title="Item" id="AQR-cC-ytv"/>
-                        <barButtonItem width="264" style="plain" systemItem="fixedSpace" id="YDG-bk-ns7"/>
-                        <barButtonItem title="Лицо не распознано" id="1kI-GU-ED4"/>
+                        <barButtonItem enabled="NO" title="Item" id="AQR-cC-ytv"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="lQu-gF-OEi"/>
+                        <barButtonItem enabled="NO" title="Лицо не распознано" id="cbk-gX-hqk"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="so7-eo-FHL">
                         <barButtonItem key="rightBarButtonItem" title="Настроить перелистывание" id="9Rk-LV-unv">
@@ -51,7 +51,8 @@
                         <outlet property="horizontalThumbnail" destination="HhY-0s-YeF" id="GD3-7w-miq"/>
                         <outlet property="pageButton" destination="AQR-cC-ytv" id="w1B-Uc-6ce"/>
                         <outlet property="pdfView" destination="euh-jh-MF8" id="9qg-KZ-Mr6"/>
-                        <outlet property="statusButton" destination="1kI-GU-ED4" id="V1y-O5-GOf"/>
+                        <outlet property="space" destination="lQu-gF-OEi" id="n7X-mD-Bgi"/>
+                        <outlet property="statusButton" destination="cbk-gX-hqk" id="aCr-ex-YKz"/>
                         <outlet property="verticalThumbnail" destination="3ON-DZ-0SY" id="lVD-XR-ztB"/>
                     </connections>
                 </viewController>

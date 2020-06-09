@@ -38,6 +38,7 @@ class ViewController: UIViewController, ViewControllerDelegate, AVCaptureVideoDa
     @IBOutlet weak var verticalThumbnail: PDFThumbnailView!
     @IBOutlet weak var horizontalThumbnail: PDFThumbnailView!
     @IBOutlet weak var pageButton: UIBarButtonItem!
+    @IBOutlet weak var space: UIBarButtonItem!
     @IBOutlet weak var statusButton: UIBarButtonItem!
     
     private lazy var currentSession: AVCaptureSession = {
@@ -80,7 +81,9 @@ class ViewController: UIViewController, ViewControllerDelegate, AVCaptureVideoDa
     func startRunning(){
         if automatic {
             currentSession.startRunning()
+            statusButton.title = "Лицо не распознано"
         }
+        else {statusButton.title = ""}
     }
     
     
@@ -90,18 +93,17 @@ class ViewController: UIViewController, ViewControllerDelegate, AVCaptureVideoDa
         output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "video"))
         currentSession.addOutput(output)
         
-        if automatic {
-            currentSession.startRunning()
-        }
+        startRunning()
         
         viewPdf = pdfView.frame
         
         changeThumbnail()
         
-        toolbarItems = [pageButton]
-        pageButton.isEnabled = false
+        toolbarItems = [pageButton, space, statusButton]
+        
         self.navigationController?.setToolbarHidden(false, animated: true)
         PDFViewSetup()
+        
         thumbnailViewSetup()
         
         NotificationCenter.default.addObserver(self, selector: #selector(handlePageChange(notification:)), name: Notification.Name.PDFViewPageChanged, object: nil)
@@ -142,7 +144,6 @@ class ViewController: UIViewController, ViewControllerDelegate, AVCaptureVideoDa
         pdfView.displayMode = .singlePageContinuous
         pdfView.pageBreakMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         pdfView.autoScales = true
-        //pdfView.usePageViewController(true, withViewOptions: [:])
     }
     
     private func thumbnailViewSetup(){
@@ -170,7 +171,6 @@ class ViewController: UIViewController, ViewControllerDelegate, AVCaptureVideoDa
     override func willMove(toParent parent: UIViewController?) {
         if (!(parent?.isEqual(self.parent) ?? false)) {
             self.navigationController?.setToolbarHidden(true, animated: true)
-            
             delegate!.changeParameters(automatic: automatic, vertical: vertical, icon: icon, row: row)
         }
     }
@@ -184,24 +184,41 @@ class ViewController: UIViewController, ViewControllerDelegate, AVCaptureVideoDa
     
     func captureOutput(_ output: AVCaptureOutput,
         didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        
         guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         let image = CIImage(cvPixelBuffer: pixelBuffer, options: nil)
         
-        let detector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorSmile : true as AnyObject])!
+        let detector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorSmile : true as AnyObject, CIDetectorAccuracy: CIDetectorAccuracyHigh])!
         
-        for feature in detector.features(in: image, options: [CIDetectorSmile : true as AnyObject]) as! [CIFaceFeature] {
+        DispatchQueue.global(qos: .userInteractive).async {
+            let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:])
+            do {
+                try handler.perform([VNDetectFaceRectanglesRequest {(req, error) in
+                        DispatchQueue.main.async {
+                            if req.results!.count == 0 {
+                                self.statusButton.title = "Лицо не распознано"
+                            }
+                    }
+                }])
+            } catch let err {
+                print("Ошибка в выполнении запроса: ", err)
+            }
+        }
+    
+        for feature in detector.features(in: image, options: [CIDetectorSmile: true as AnyObject, CIDetectorAccuracy: CIDetectorAccuracyHigh]) as! [CIFaceFeature] {
+
             if (feature.hasSmile) {
                 DispatchQueue.main.async {
                     if !self.smile {
-                    self.smile = true
-                    self.changePage()
+                        self.statusButton.title = "Распознана улыбка"
+                        self.smile = true
+                        self.changePage()
                     }
                 }
             }
             else {
                 DispatchQueue.main.async {
                     self.smile = false
+                    self.statusButton.title = "Лицо распознано"
                 }
             }
         }

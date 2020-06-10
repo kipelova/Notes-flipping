@@ -115,15 +115,6 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
         searchController.searchBar.isUserInteractionEnabled = true
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        print(indexPath, editingStyle)
-    }
-    
-    override func tableView(_ tableView: UITableView,
-                            canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
     @IBAction func editAction(_ sender: Any) {
         if tableView.isEditing && editButton.title == "Изменить" {
             tableView.setEditing(false, animated: false)
@@ -214,6 +205,7 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration {
+        tableView.setEditing(false, animated: true)
         let favourite = UIContextualAction(style: .normal, title: "Избранное") { (favourite, view, competion) in
             try! self.realm.write {
                 self.notes[indexPath.row].favourite = !self.notes[indexPath.row].favourite
@@ -301,41 +293,6 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
         else { return UISwipeActionsConfiguration(actions: [delete, edit]) }
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -352,9 +309,9 @@ func updateSearchResults(for searchController: UISearchController) {
 }
     private func filterContentForSearchText(_ searchText:String){
         if isFavourite {
-            sortedNotes = favouriteNotes.filter("name CONTAINS[c] '\(searchText.lowercased())'")}
+            sortedNotes = favouriteNotes.filter("name CONTAINS[cd] '\(searchText)'")}
             else {
-                sortedNotes = notes.filter("name CONTAINS[c] '\(searchText.lowercased())'")}
+                sortedNotes = notes.filter("name CONTAINS[cd] '\(searchText)'")}
             tableView.reloadData()
         }
 }

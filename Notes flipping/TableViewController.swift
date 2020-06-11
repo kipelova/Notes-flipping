@@ -106,7 +106,7 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
         present(controller, animated: true, completion: nil) 
     }
     
-    func notEditinStyle() {
+    private func notEditinStyle() {
         editButton.title = "Изменить"
         navigationController?.setToolbarHidden(true, animated: true)
         addButton.isEnabled = true
@@ -205,7 +205,7 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration {
-        tableView.setEditing(false, animated: true)
+        if !isChanging { tableView.setEditing(false, animated: true)}
         let favourite = UIContextualAction(style: .normal, title: "Избранное") { (favourite, view, competion) in
             try! self.realm.write {
                 self.notes[indexPath.row].favourite = !self.notes[indexPath.row].favourite
@@ -223,7 +223,7 @@ class TableViewController: UITableViewController, TableViewControllerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration {
-        tableView.setEditing(false, animated: true)
+        if !isChanging { tableView.setEditing(false, animated: true)}
         let delete = UIContextualAction(style: .normal, title: "Удалить") { (delete, view, competion) in
             if self.isFavourite {
                 try! self.realm.write {

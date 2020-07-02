@@ -1,0 +1,6 @@
+module Pods_Notes_flipping {
+  umbrella header "Pods-Notes flipping-umbrella.h"
+
+  export *
+  module * { export * }
+}
